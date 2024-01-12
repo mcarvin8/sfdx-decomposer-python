@@ -1,32 +1,12 @@
-import argparse
 import logging
 import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-ns = {'sforce': 'http://soap.sforce.com/2006/04/metadata'}
-XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
+from constants import XML_HEADER, ELEMENT_TAGS, parse_args
 
-ELEMENT_TAGS = {
-  "labels": "CustomLabels",
-  "workflow": "Workflow",
-  "profile": "Profile",
-  "permissionset": "PermissionSet"
-}
-
-# Set up logging configuration
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
-def parse_args():
-    """Function to parse command line arguments."""
-    parser = argparse.ArgumentParser(description='A script to compose Salesforce metadata.')
-    parser.add_argument('-t', '--metadata-type', required=True,
-                        choices=['labels', 'permissionset', 'workflow', 'profile'],
-                        help='Specify the metadata type (labels, permissionset, workflow, profile)')
-    parser.add_argument('-o', '--output', default='force-app/main/default',
-                        help='Output directory for de-composed metadata files')
-    args = parser.parse_args()
-    return args
 
 def read_individual_xmls(metadata_directory, expected_extension, metadata_type):
     """Read each XML file."""
@@ -48,7 +28,7 @@ def read_individual_xmls(metadata_directory, expected_extension, metadata_type):
                     parent_metadata_type = 'CustomLabels'
                 process_metadata_file(file_path, parent_metadata_type)
 
-    # Sort by workflow type and then alphabetically
+    # Sort by type and then alphabetically
     sorted_individual_xmls = {k: sorted(v, key=lambda x: x.tag) for k, v in sorted(individual_xmls.items())}
 
     return sorted_individual_xmls
@@ -89,13 +69,13 @@ def merge_xml_content(individual_xmls, metadata_type):
 def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension):
     """Create the final XMLs."""
     for parent_metadata_type, parent_metadata_root in merged_xmls.items():
-        # Load the parent perm set meta file if it exists in the sub-folder (profiles and perm sets)
+        # Load the parent meta file if it exists in the sub-folder (profiles and perm sets)
         existing_meta_file_path = os.path.join(metadata_directory, parent_metadata_type, f'{parent_metadata_type}{expected_extension}')
         if os.path.exists(existing_meta_file_path):
             existing_tree = ET.parse(existing_meta_file_path)
             existing_root = existing_tree.getroot()
 
-            # Iterate through the sub-elements in the existing permission set
+            # Iterate through the sub-elements in the existing meta file
             for existing_sub_element in existing_root:
                 # Check if the sub-element is not already present in the merged XML
                 if not any(existing_sub_element.tag == child.tag for child in parent_metadata_root):

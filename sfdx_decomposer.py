@@ -1,29 +1,11 @@
-import argparse
 import logging
 import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
+from constants import XML_HEADER, ns, ELEMENT_TAGS, NAME_TAGS, parse_args
+
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-ns = {'sforce': 'http://soap.sforce.com/2006/04/metadata'}
-XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
-
-# name tags to name the element.
-# ensure fullName is first for workflows. all other names are for profiles and permission sets
-NAME_TAGS = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource', 'flow',
-            'object', 'apexPage', 'recordType', 'tab', 'field', 'startAddress',
-            'dataCategoryGroup', 'layout', 'weekdayStart', 'friendlyname']
-
-def parse_args():
-    """Function to parse command line arguments."""
-    parser = argparse.ArgumentParser(description='A script to de-compose Salesforce metadata.')
-    parser.add_argument('-t', '--metadata-type', required=True,
-                        choices=['labels', 'permissionset', 'workflow', 'profile'],
-                        help='Specify the metadata type (labels, permissionset, workflow, profile)')
-    parser.add_argument('-o', '--output', default='force-app/main/default',
-                        help='Output directory for de-composed metadata files')
-    args = parser.parse_args()
-    return args
 
 def extract_full_name(element, namespace):
     """Extract the full name from a given XML element."""
@@ -106,12 +88,8 @@ def parse_xml_file(metadata_file_path):
     return None
 
 def create_single_elements(metadata_type):
-    """"Create an element for metadata types with un-nested elements."""
-    if metadata_type == 'profile':
-        return ET.Element(metadata_type.capitalize())
-    elif metadata_type == 'permissionset':
-        return ET.Element('PermissionSet')
-    return None
+    """"Create an element for un-nested elements."""
+    return ET.Element(ELEMENT_TAGS.get(metadata_type))
 
 def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension):
     """Process a single metadata file and extract elements."""
@@ -146,8 +124,8 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                 else:
                     logging.info('Skipping %s element without fullName', tag)
 
-    if single_elements:
-        # Create an ElementTree object with the single element root
+    # only create an XML with un-nested elements if there are any
+    if len(list(single_elements.iter())) > 1:
         single_tree = ET.ElementTree(single_elements)
         create_meta_xml_file(single_tree,
                              os.path.join(metadata_directory,
