@@ -45,7 +45,7 @@ $RECYCLE.BIN/
 **/venv/
 
 # Ignore profiles permission sets, workflows, labels created by retrievals
-force-app/main/default/permissionsets/*.permissionset-meta.xml
-force-app/main/default/profiles/*.profile-meta.xml
+**/permissionsets/*.permissionset-meta.xml
+**/profiles/*.profile-meta.xml
 CustomLabels.labels-meta.xml
 *.workflow-meta.xml
