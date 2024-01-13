@@ -10,6 +10,9 @@ The following metadata types are supported:
 - Flows (`-t "flow"`)
 - Matching Rules (`-t "matchingRule"`)
 - Assignment Rules (`-t "assignmentRules"`)
+- Escalation Rules (`-t "escalationRules"`)
+- Sharing Rules (`-t "sharingRules"`)
+- Auto Response Rules (`-t "autoResponseRules"`)
 
 To decompose the original meta files, run the decomposer script for each metadata type after retrieving all metadata from your production org.
 

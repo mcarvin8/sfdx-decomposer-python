@@ -19,6 +19,9 @@ package.xml
 **/flows/**/*.xml
 **/matchingRules/**/*.xml
 **/assignmentRules/**/*.xml
+**/escalationRules/**/*.xml
+**/sharingRules/**/*.xml
+**/autoResponseRules/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -28,3 +31,6 @@ package.xml
 !**/flows/*.flow-meta.xml
 !**/matchingRules/*.matchingRule-meta.xml
 !**/assignmentRules/*.assignmentRules-meta.xml
+!**/escalationRules/*.escalationRules-meta.xml
+!**/sharingRules/*.sharingRules-meta.xml
+!**/autoResponseRules/*.autoResponseRules-meta.xml

@@ -52,3 +52,6 @@ $RECYCLE.BIN/
 **/flows/*.flow-meta.xml
 **/matchingRules/*.matchingRule-meta.xml
 **/assignmentRules/*.assignmentRules-meta.xml
+**/escalationRules/*.escalationRules-meta.xml
+**/sharingRules/*.sharingRules-meta.xml
+**/autoResponseRules/*.autoResponseRules-meta.xml

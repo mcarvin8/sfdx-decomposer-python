@@ -39,6 +39,21 @@ SUPPORTED_METADATA = [
       "directoryName": "flows",
       "metaTag": "flow",
       "xmlTag": "Flow"
+    },
+    {
+      "directoryName": "escalationRules",
+      "metaTag": "escalationRules",
+      "xmlTag": "EscalationRules"
+    },
+    {
+      "directoryName": "sharingRules",
+      "metaTag": "sharingRules",
+      "xmlTag": "SharingRules"
+    },
+    {
+      "directoryName": "autoResponseRules",
+      "metaTag": "autoResponseRules",
+      "xmlTag": "AutoResponseRules"
     }
 ]
 
