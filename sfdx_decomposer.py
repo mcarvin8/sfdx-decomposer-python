@@ -11,7 +11,8 @@ def extract_full_name(element, namespace):
     """Extract the full name from a given XML element."""
     full_name_element = None
     for tag in NAME_TAGS:
-        full_name_element = element.find(f'sforce:{tag}', namespace)
+        # update to find nested elements
+        full_name_element = element.find(f'.//sforce:{tag}', namespace)
         if full_name_element is not None:
             break  # Break the loop if a matching tag is found
 
@@ -28,7 +29,15 @@ def format_xml_contents(xml_contents):
 
 def create_meta_xml_file(contents, file_name):
     """Create a new XML file with un-nested meta elements."""
-    unformatted_xml = minidom.parseString(ET.tostring(contents.getroot())).toprettyxml(indent="    ")
+    root = contents.getroot()
+    sorted_elements = sorted(root, key=lambda elem: (elem.tag.split('}')[-1], elem.text))
+
+    # Create a new XML tree with sorted elements
+    sorted_tree = ET.ElementTree(ET.Element(root.tag, attrib=root.attrib))
+    sorted_root = sorted_tree.getroot()
+    sorted_root.extend(sorted_elements)
+
+    unformatted_xml = minidom.parseString(ET.tostring(sorted_root)).toprettyxml(indent="    ")
 
     formatted_xml = format_xml_contents(unformatted_xml)
 

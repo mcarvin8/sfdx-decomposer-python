@@ -11,14 +11,16 @@ package.xml
 # LWC Jest
 **/__tests__/**
 
-# Ignore all profile, labels, perms, workflows XMLs by default
+# Ignore all XMLs by default
 **/profiles/**/*.xml
 **/permissionsets/**/*.xml
 **/labels/*.xml
 **/workflows/**/*.xml
+**/flows/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
 !**/labels/CustomLabels.labels-meta.xml
 !**/workflows/*.workflow-meta.xml
 !**/profiles/*.profile-meta.xml
+!**/flows/*.flow-meta.xml

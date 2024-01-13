@@ -44,8 +44,9 @@ $RECYCLE.BIN/
 **/.venv/
 **/venv/
 
-# Ignore profiles permission sets, workflows, labels created by retrievals
+# Ignore the original files created by retrievals
 **/permissionsets/*.permissionset-meta.xml
 **/profiles/*.profile-meta.xml
-CustomLabels.labels-meta.xml
-*.workflow-meta.xml
+**/labels/CustomLabels.labels-meta.xml
+**/workflows/*.workflow-meta.xml
+**/flows/*.flow-meta.xml
