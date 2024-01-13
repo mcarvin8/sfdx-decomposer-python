@@ -10,7 +10,8 @@ ELEMENT_TAGS = {
   "profile": "Profile",
   "permissionset": "PermissionSet",
   "flow": "Flow",
-  "matchingRule": "MatchingRules"
+  "matchingRule": "MatchingRules",
+  "assignmentRules": "AssignmentRules"
 }
 
 # name tags to name the element
@@ -26,8 +27,9 @@ def parse_args():
     """Function to parse command line arguments."""
     parser = argparse.ArgumentParser(description='A script to de-compose Salesforce metadata.')
     parser.add_argument('-t', '--metadata-type', required=True,
-                        choices=['labels', 'permissionset', 'workflow', 'profile', 'flow', 'matchingRule'],
-                        help='Specify the metadata type (labels, permissionset, workflow, profile, flow, matchingRule)')
+                        choices=['labels', 'permissionset', 'workflow',
+                                 'profile', 'flow', 'matchingRule', 'assignmentRules'],
+                        help='Specify a supported metadata type')
     parser.add_argument('-o', '--output', default='force-app/main/default',
                         help='Output directory for de-composed metadata files')
     args = parser.parse_args()

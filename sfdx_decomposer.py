@@ -151,7 +151,7 @@ def separate_metadata(metadata_directory, metadata_type):
 
 def main(metadata_type, output_directory):
     """Main function."""
-    if metadata_type != 'labels':
+    if metadata_type != 'labels' and metadata_type != 'assignmentRules':
         metadata_folder = f"{metadata_type}s"
     else:
         metadata_folder = metadata_type

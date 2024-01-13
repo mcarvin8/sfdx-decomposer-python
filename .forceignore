@@ -18,6 +18,7 @@ package.xml
 **/workflows/**/*.xml
 **/flows/**/*.xml
 **/matchingRules/**/*.xml
+**/assignmentRules/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -26,3 +27,4 @@ package.xml
 !**/profiles/*.profile-meta.xml
 !**/flows/*.flow-meta.xml
 !**/matchingRules/*.matchingRule-meta.xml
+!**/assignmentRules/*.assignmentRules-meta.xml

@@ -51,3 +51,4 @@ $RECYCLE.BIN/
 **/workflows/*.workflow-meta.xml
 **/flows/*.flow-meta.xml
 **/matchingRules/*.matchingRule-meta.xml
+**/assignmentRules/*.assignmentRules-meta.xml
