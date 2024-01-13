@@ -17,6 +17,7 @@ package.xml
 **/labels/*.xml
 **/workflows/**/*.xml
 **/flows/**/*.xml
+**/matchingRules/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -24,3 +25,4 @@ package.xml
 !**/workflows/*.workflow-meta.xml
 !**/profiles/*.profile-meta.xml
 !**/flows/*.flow-meta.xml
+!**/matchingRules/*.matchingRule-meta.xml

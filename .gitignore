@@ -50,3 +50,4 @@ $RECYCLE.BIN/
 **/labels/CustomLabels.labels-meta.xml
 **/workflows/*.workflow-meta.xml
 **/flows/*.flow-meta.xml
+**/matchingRules/*.matchingRule-meta.xml
