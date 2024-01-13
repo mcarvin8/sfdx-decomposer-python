@@ -4,15 +4,43 @@ ns = {'sforce': 'http://soap.sforce.com/2006/04/metadata'}
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
 
 # supported metadata
-ELEMENT_TAGS = {
-  "labels": "CustomLabels",
-  "workflow": "Workflow",
-  "profile": "Profile",
-  "permissionset": "PermissionSet",
-  "flow": "Flow",
-  "matchingRule": "MatchingRules",
-  "assignmentRules": "AssignmentRules"
-}
+SUPPORTED_METADATA = [
+    {
+      "directoryName": "labels",
+      "metaTag": "labels",
+      "xmlTag": "CustomLabels"
+    },
+    {
+      "directoryName": "workflows",
+      "metaTag": "workflow",
+      "xmlTag": "Workflow"
+    },
+    {
+      "directoryName": "profiles",
+      "metaTag": "profile",
+      "xmlTag": "Profile"
+    },
+    {
+      "directoryName": "permissionsets",
+      "metaTag": "permissionset",
+      "xmlTag": "PermissionSet"
+    },
+    {
+      "directoryName": "matchingRules",
+      "metaTag": "matchingRule",
+      "xmlTag": "MatchingRules"
+    },
+    {
+      "directoryName": "assignmentRules",
+      "metaTag": "assignmentRules",
+      "xmlTag": "AssignmentRules"
+    },
+    {
+      "directoryName": "flows",
+      "metaTag": "flow",
+      "xmlTag": "Flow"
+    }
+]
 
 # name tags to name the element
 # update when adding new supported metadata above
@@ -26,9 +54,9 @@ NAME_TAGS = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource
 def parse_args():
     """Function to parse command line arguments."""
     parser = argparse.ArgumentParser(description='A script to de-compose Salesforce metadata.')
+    metadata_choices = [metadata["metaTag"] for metadata in SUPPORTED_METADATA]
     parser.add_argument('-t', '--metadata-type', required=True,
-                        choices=['labels', 'permissionset', 'workflow',
-                                 'profile', 'flow', 'matchingRule', 'assignmentRules'],
+                        choices=metadata_choices,
                         help='Specify a supported metadata type')
     parser.add_argument('-o', '--output', default='force-app/main/default',
                         help='Output directory for de-composed metadata files')

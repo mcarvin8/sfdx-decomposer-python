@@ -3,7 +3,7 @@ import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-from constants import XML_HEADER, ELEMENT_TAGS, parse_args
+from constants import XML_HEADER, SUPPORTED_METADATA, parse_args
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
@@ -37,11 +37,11 @@ def has_subelements(element):
     """Check if an XML element has sub-elements."""
     return any(element.iter())
 
-def merge_xml_content(individual_xmls, metadata_type):
+def merge_xml_content(individual_xmls, xml_tag):
     """Merge XMLs for each object."""
     merged_xmls = {}
     for parent_metadata_type, individual_roots in individual_xmls.items():
-        parent_metadata_root = ET.Element(ELEMENT_TAGS.get(metadata_type), xmlns="http://soap.sforce.com/2006/04/metadata")
+        parent_metadata_root = ET.Element(xml_tag, xmlns="http://soap.sforce.com/2006/04/metadata")
 
         # Sort individual_roots by tag to match Salesforce CLI output
         individual_roots.sort(key=lambda x: x.tag)
@@ -95,11 +95,11 @@ def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension):
             file.write(XML_HEADER.encode('utf-8'))
             file.write(formatted_xml.encode('utf-8'))
 
-def combine_metadata(output_directory, metadata_type):
+def combine_metadata(output_directory, metadata_type, meta_extension, xml_tag):
     """Combine the metadata for deployments."""
-    expected_extension = f".{metadata_type}-meta.xml"
+    expected_extension = f".{meta_extension}-meta.xml"
     individual_xmls = read_individual_xmls(output_directory, expected_extension, metadata_type)
-    merged_xmls = merge_xml_content(individual_xmls, metadata_type)
+    merged_xmls = merge_xml_content(individual_xmls, xml_tag)
     format_and_write_xmls(merged_xmls, output_directory, expected_extension)
 
 
@@ -107,12 +107,16 @@ def combine_metadata(output_directory, metadata_type):
 
 def main(metadata_type, output_directory):
     """Main function."""
-    if metadata_type != 'labels' and metadata_type != 'assignmentRules':
-        metadata_folder = f"{metadata_type}s"
-    else:
-        metadata_folder = metadata_type
+    metadata_folder = None
+    for metadata_info in SUPPORTED_METADATA:
+        if metadata_info["metaTag"] == metadata_type:
+            metadata_folder = metadata_info["directoryName"]
+            meta_extension = metadata_info["metaTag"]
+            xml_tag = metadata_info["xmlTag"]
+            break
     metadata_directory = os.path.join(output_directory, metadata_folder)
-    combine_metadata(metadata_directory, metadata_type)
+    combine_metadata(metadata_directory, metadata_type,
+                     meta_extension, xml_tag)
 
 if __name__ == '__main__':
     inputs = parse_args()

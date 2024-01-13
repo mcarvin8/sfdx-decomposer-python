@@ -3,7 +3,7 @@ import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-from constants import XML_HEADER, ns, ELEMENT_TAGS, NAME_TAGS, parse_args
+from constants import XML_HEADER, ns, SUPPORTED_METADATA, NAME_TAGS, parse_args
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
@@ -96,11 +96,11 @@ def parse_xml_file(metadata_file_path):
         logging.info("Error: Unable to parse the XML file.")
     return None
 
-def create_single_elements(metadata_type):
+def create_single_elements(xml_tag):
     """"Create an element for un-nested elements."""
-    return ET.Element(ELEMENT_TAGS.get(metadata_type))
+    return ET.Element(xml_tag)
 
-def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension):
+def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_tag):
     """Process a single metadata file and extract elements."""
     metadata_file_path = os.path.join(metadata_directory, filename)
     root = parse_xml_file(metadata_file_path)
@@ -114,7 +114,7 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
     else:
         parent_metadata_name = None
 
-    single_elements = create_single_elements(metadata_type)
+    single_elements = create_single_elements(xml_tag)
 
     # Iterate through the dynamically extracted XML tags
     for tag in xml_tags:
@@ -141,22 +141,30 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                              parent_metadata_name,
                              f'{parent_metadata_name}{expected_extension}'))
 
-def separate_metadata(metadata_directory, metadata_type):
+def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_tag):
     """Separate metadata into individual XML files."""
     # Iterate through the directory to process files
     for filename in os.listdir(metadata_directory):
-        expected_extension = f".{metadata_type}-meta.xml"
+        expected_extension = f".{meta_extension}-meta.xml"
         if filename.endswith(expected_extension):
-            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension)
+            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_tag)
 
 def main(metadata_type, output_directory):
     """Main function."""
-    if metadata_type != 'labels' and metadata_type != 'assignmentRules':
-        metadata_folder = f"{metadata_type}s"
-    else:
-        metadata_folder = metadata_type
+    metadata_folder = None
+    for metadata_info in SUPPORTED_METADATA:
+        if metadata_info["metaTag"] == metadata_type:
+            metadata_folder = metadata_info["directoryName"]
+            meta_extension = metadata_info["metaTag"]
+            xml_tag = metadata_info["xmlTag"]
+            break
+
+    if not metadata_folder:
+        return
+
     metadata_directory = os.path.join(output_directory, metadata_folder)
-    separate_metadata(metadata_directory, metadata_type)
+    separate_metadata(metadata_directory, metadata_type,
+                      meta_extension, xml_tag)
 
 if __name__ == '__main__':
     inputs = parse_args()
