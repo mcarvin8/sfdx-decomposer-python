@@ -22,6 +22,9 @@ package.xml
 **/escalationRules/**/*.xml
 **/sharingRules/**/*.xml
 **/autoResponseRules/**/*.xml
+**/globalValueSetTranslations/**/*.xml
+**/standardValueSetTranslations/**/*.xml
+**/marketingappextensions/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -34,3 +37,6 @@ package.xml
 !**/escalationRules/*.escalationRules-meta.xml
 !**/sharingRules/*.sharingRules-meta.xml
 !**/autoResponseRules/*.autoResponseRules-meta.xml
+!**/globalValueSetTranslations/*.globalValueSetTranslation-meta.xml
+!**/standardValueSetTranslations/*.standardValueSetTranslation-meta.xml
+!**/marketingappextensions/*.marketingappextension-meta.xml

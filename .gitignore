@@ -55,3 +55,6 @@ $RECYCLE.BIN/
 **/escalationRules/*.escalationRules-meta.xml
 **/sharingRules/*.sharingRules-meta.xml
 **/autoResponseRules/*.autoResponseRules-meta.xml
+**/globalValueSetTranslations/*.globalValueSetTranslation-meta.xml
+**/standardValueSetTranslations/*.standardValueSetTranslation-meta.xml
+**/marketingappextensions/*.marketingappextension-meta.xml

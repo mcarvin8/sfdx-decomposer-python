@@ -54,6 +54,21 @@ SUPPORTED_METADATA = [
       "directoryName": "autoResponseRules",
       "metaSuffix": "autoResponseRules",
       "xmlElement": "AutoResponseRules"
+    },
+    {
+      "directoryName": "globalValueSetTranslations",
+      "metaSuffix": "globalValueSetTranslation",
+      "xmlElement": "GlobalValueSetTranslation"
+    },
+    {
+      "directoryName": "standardValueSetTranslations",
+      "metaSuffix": "standardValueSetTranslation",
+      "xmlElement": "StandardValueSetTranslation"
+    },
+    {
+      "directoryName": "marketingappextensions",
+      "metaSuffix": "marketingappextension",
+      "xmlElement": "MarketingAppExtension"
     }
 ]
 
@@ -65,7 +80,7 @@ FIELD_NAMES = ['fullName', 'application', 'apexClass', 'name', 'externalDataSour
             'object', 'apexPage', 'recordType', 'tab', 'field', 'startAddress',
             'dataCategoryGroup', 'layout', 'weekdayStart', 'friendlyname',
             'actionName', 'targetReference', 'assignToReference',
-            'choiceText', 'promptText']
+            'choiceText', 'promptText', 'masterLabel']
 
 def parse_args():
     """Function to parse command line arguments."""

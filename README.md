@@ -13,6 +13,9 @@ The following metadata types are supported:
 - Escalation Rules (`-t "escalationRules"`)
 - Sharing Rules (`-t "sharingRules"`)
 - Auto Response Rules (`-t "autoResponseRules"`)
+- Global Value Set Translation (`-t "globalValueSetTranslation"`)
+- Standard Value Set Translation (`-t "standardValueSetTranslation"`)
+- Marketing App Extension (`-t "marketingappextension"`)
 
 To decompose the original meta files, run the decomposer script for each metadata type after retrieving all metadata from your production org.
 
@@ -50,23 +53,53 @@ SUPPORTED_METADATA = [
     }
 ```
 3. Using the Metadata API Developer Guide, ensure FIELD_NAMES in the `constants.py` contains the required field names for nested elements under the metadata type
-    - In the below XML file, the `masterLabel` field name is a required field name for the nested valueTranslation element and should be  
+    - In the below XML file, the `apexClass` field name is a required field name for the nested classAccesses element and should be included in the FIELD_NAMES variable.
+    - Fields which do not have nested elements such as `<description></description>` should not be included in the FIELD_NAMES variable. All unnested elements will be added to the same meta file when decomposed.
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
-<GlobalValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <valueTranslation>
-        <masterLabel>Three</masterLabel>
-        <translation>Trois</translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Four</masterLabel>
-        <translation>Quatre</translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Five</masterLabel>
-        <translation><!-- Five --></translation>
-    </valueTranslation>
-</GlobalValueSetTranslation>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Grants all rights needed for an HR administrator to manage employees.</description>
+    <label>HR Administration</label>
+    <userLicense>Salesforce</userLicense>
+    <applicationVisibilities>
+        <application>JobApps__Recruiting</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>APIEnabled</name>
+    </userPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>Job_Request__c</object>
+    </objectPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Job_Request__c.Salary__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <pageAccesses>
+        <apexPage>Job_Request_Web_Form</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <classAccesses>
+      <apexClass>Send_Email_Confirmation</apexClass>
+      <enabled>true</enabled>
+    </classAccesses>
+    <tabSettings>
+        <tab>Job_Request__c</tab>
+        <visibility>Available</visibility>
+    </tabSettings>
+    <recordTypeVisibilities>
+        <recordType>Recruiting.DevManager</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+</PermissionSet>
 ```
 
 ``` python
@@ -80,3 +113,5 @@ FIELD_NAMES = ['fullName', 'application', 'apexClass', 'name', 'externalDataSour
             'actionName', 'targetReference', 'assignToReference',
             'choiceText', 'promptText', 'masterLabel']
 ```
+4. Update the `.forceignore` to ignore the decomposed meta files and allow (`!`) the original meta files
+5. Update the `.gitignore` to ignore the original meta files
