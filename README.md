@@ -2,6 +2,7 @@
 
 Python scripts to decompose Salesforce metadata files into separate files for version control and recompose files compatible for deployments.
 
+## Supported Metadata
 The following metadata types are supported:
 - Custom Labels (`-t "labels"`)
 - Workflows (`-t "workflow"`)
@@ -17,23 +18,42 @@ The following metadata types are supported:
 - Standard Value Set Translation (`-t "standardValueSetTranslation"`)
 - Marketing App Extension (`-t "marketingappextension"`)
 
+**NOTE**:
+Per Salesforce documentation for **Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
+``` xml
+    <valueTranslation>
+        <masterLabel>Warm</masterLabel>
+        <translation><!-- Warm --></translation>
+    </valueTranslation>
+```
+The decompose script will not process these comments correctly. Ensure all translation meta files have proper translations before decomposing them.
+
+## Decompose Files
 To decompose the original meta files, run the decomposer script for each metadata type after retrieving all metadata from your production org.
 
 ```
 - python3 ./sfdx_decomposer.py -t "TYPE"
 ```
-
+Arguments:
+- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `constants.py`)
+- `-o`/`--output` - directory containing the metadata (defaults to `force-app/main/default` if the argument isn't provided)
 NOTE: This script will have issues for file-paths which exceed the operating system limit. Ensure you use short file-names when possible.
 
+## Compose Files
 To recompose the files into meta files accepted for deployments, run the composer script for each metadata type:
 
 ```
 - python3 ./sfdx_composer.py -t "TYPE"
 ```
+Arguments:
+- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `constants.py`)
+- `-o`/`--output` - directory containing the metadata (defaults to `force-app/main/default` if the argument isn't provided)
 
-By default, both scripts set the `-o`/`--output` argument to `force-app/main/default`. Supply this argument if your metadata is located in a different directory.
+## Ignore Files
 
 The `.gitignore` and `.forceignore` have been updated to have Git ignore the original meta files and have the Salesforce CLI ignore the decomposed meta files.
+
+Salesforce CLI version 2.10.2 correctly handles opt-in style with directories on the forceignore (https://github.com/forcedotcom/cli/issues/2404). Ensure you're using a version of the CLI which supports opt-in style with directories.
 
 ## Adding Metadata Types
 
