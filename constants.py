@@ -7,60 +7,61 @@ XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
 SUPPORTED_METADATA = [
     {
       "directoryName": "labels",
-      "metaTag": "labels",
-      "xmlTag": "CustomLabels"
+      "metaSuffix": "labels",
+      "xmlElement": "CustomLabels"
     },
     {
       "directoryName": "workflows",
-      "metaTag": "workflow",
-      "xmlTag": "Workflow"
+      "metaSuffix": "workflow",
+      "xmlElement": "Workflow"
     },
     {
       "directoryName": "profiles",
-      "metaTag": "profile",
-      "xmlTag": "Profile"
+      "metaSuffix": "profile",
+      "xmlElement": "Profile"
     },
     {
       "directoryName": "permissionsets",
-      "metaTag": "permissionset",
-      "xmlTag": "PermissionSet"
+      "metaSuffix": "permissionset",
+      "xmlElement": "PermissionSet"
     },
     {
       "directoryName": "matchingRules",
-      "metaTag": "matchingRule",
-      "xmlTag": "MatchingRules"
+      "metaSuffix": "matchingRule",
+      "xmlElement": "MatchingRules"
     },
     {
       "directoryName": "assignmentRules",
-      "metaTag": "assignmentRules",
-      "xmlTag": "AssignmentRules"
+      "metaSuffix": "assignmentRules",
+      "xmlElement": "AssignmentRules"
     },
     {
       "directoryName": "flows",
-      "metaTag": "flow",
-      "xmlTag": "Flow"
+      "metaSuffix": "flow",
+      "xmlElement": "Flow"
     },
     {
       "directoryName": "escalationRules",
-      "metaTag": "escalationRules",
-      "xmlTag": "EscalationRules"
+      "metaSuffix": "escalationRules",
+      "xmlElement": "EscalationRules"
     },
     {
       "directoryName": "sharingRules",
-      "metaTag": "sharingRules",
-      "xmlTag": "SharingRules"
+      "metaSuffix": "sharingRules",
+      "xmlElement": "SharingRules"
     },
     {
       "directoryName": "autoResponseRules",
-      "metaTag": "autoResponseRules",
-      "xmlTag": "AutoResponseRules"
+      "metaSuffix": "autoResponseRules",
+      "xmlElement": "AutoResponseRules"
     }
 ]
 
-# name tags to name the element
-# update when adding new supported metadata above
-# ensure fullName is first for workflows. all other names are for profiles and permission sets
-NAME_TAGS = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource', 'flow',
+# field names used to name decomposed files for nested elements
+# field names should be required per the Metadata API developer guide
+# field names will be processed in the order they appear below
+# ensure fullName is first since that is a default field from the Metadata type
+FIELD_NAMES = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource', 'flow',
             'object', 'apexPage', 'recordType', 'tab', 'field', 'startAddress',
             'dataCategoryGroup', 'layout', 'weekdayStart', 'friendlyname',
             'actionName', 'targetReference', 'assignToReference',
@@ -69,7 +70,7 @@ NAME_TAGS = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource
 def parse_args():
     """Function to parse command line arguments."""
     parser = argparse.ArgumentParser(description='A script to de-compose Salesforce metadata.')
-    metadata_choices = [metadata["metaTag"] for metadata in SUPPORTED_METADATA]
+    metadata_choices = [metadata["metaSuffix"] for metadata in SUPPORTED_METADATA]
     parser.add_argument('-t', '--metadata-type', required=True,
                         choices=metadata_choices,
                         help='Specify a supported metadata type')

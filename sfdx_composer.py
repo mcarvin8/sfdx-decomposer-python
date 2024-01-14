@@ -37,11 +37,11 @@ def has_subelements(element):
     """Check if an XML element has sub-elements."""
     return any(element.iter())
 
-def merge_xml_content(individual_xmls, xml_tag):
+def merge_xml_content(individual_xmls, xml_root_element):
     """Merge XMLs for each object."""
     merged_xmls = {}
     for parent_metadata_type, individual_roots in individual_xmls.items():
-        parent_metadata_root = ET.Element(xml_tag, xmlns="http://soap.sforce.com/2006/04/metadata")
+        parent_metadata_root = ET.Element(xml_root_element, xmlns="http://soap.sforce.com/2006/04/metadata")
 
         # Sort individual_roots by tag to match Salesforce CLI output
         individual_roots.sort(key=lambda x: x.tag)
@@ -95,11 +95,11 @@ def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension):
             file.write(XML_HEADER.encode('utf-8'))
             file.write(formatted_xml.encode('utf-8'))
 
-def combine_metadata(output_directory, metadata_type, meta_extension, xml_tag):
+def combine_metadata(output_directory, metadata_type, meta_extension, xml_root_element):
     """Combine the metadata for deployments."""
     expected_extension = f".{meta_extension}-meta.xml"
     individual_xmls = read_individual_xmls(output_directory, expected_extension, metadata_type)
-    merged_xmls = merge_xml_content(individual_xmls, xml_tag)
+    merged_xmls = merge_xml_content(individual_xmls, xml_root_element)
     format_and_write_xmls(merged_xmls, output_directory, expected_extension)
 
 
@@ -109,14 +109,14 @@ def main(metadata_type, output_directory):
     """Main function."""
     metadata_folder = None
     for metadata_info in SUPPORTED_METADATA:
-        if metadata_info["metaTag"] == metadata_type:
+        if metadata_info["metaSuffix"] == metadata_type:
             metadata_folder = metadata_info["directoryName"]
-            meta_extension = metadata_info["metaTag"]
-            xml_tag = metadata_info["xmlTag"]
+            meta_extension = metadata_info["metaSuffix"]
+            xml_root_element = metadata_info["xmlElement"]
             break
     metadata_directory = os.path.join(output_directory, metadata_folder)
     combine_metadata(metadata_directory, metadata_type,
-                     meta_extension, xml_tag)
+                     meta_extension, xml_root_element)
 
 if __name__ == '__main__':
     inputs = parse_args()

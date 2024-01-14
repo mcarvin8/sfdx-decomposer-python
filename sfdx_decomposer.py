@@ -3,20 +3,20 @@ import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-from constants import XML_HEADER, ns, SUPPORTED_METADATA, NAME_TAGS, parse_args
+from constants import XML_HEADER, ns, SUPPORTED_METADATA, FIELD_NAMES, parse_args
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
-def extract_full_name(element, namespace):
-    """Extract the full name from a given XML element."""
-    full_name_element = None
-    for tag in NAME_TAGS:
+def extract_field_name(element, namespace):
+    """Extract the field name from a nested element."""
+    field_name = None
+    for tag in FIELD_NAMES:
         # update to find nested elements
-        full_name_element = element.find(f'.//sforce:{tag}', namespace)
-        if full_name_element is not None:
+        field_name = element.find(f'.//sforce:{tag}', namespace)
+        if field_name is not None:
             break  # Break the loop if a matching tag is found
 
-    return full_name_element.text if full_name_element is not None else None
+    return field_name.text if field_name is not None else None
 
 def format_xml_contents(xml_contents):
     """Format XML before writing it."""
@@ -50,7 +50,7 @@ def create_meta_xml_file(contents, file_name):
         logging.info('ERROR writing file: %s', file_name)
         logging.info('%s', e)
 
-def create_nested_xml_file(label, parent_directory, tag, full_name, parent_metadata_name=None):
+def create_nested_xml_file(label, parent_directory, tag, field_name, parent_metadata_name=None):
     """Create a new XML file with nested elements."""
     tag_without_namespace = tag.split('}')[-1] if '}' in tag else tag
 
@@ -65,7 +65,7 @@ def create_nested_xml_file(label, parent_directory, tag, full_name, parent_metad
     if tag_without_namespace == 'labels':
         tag_without_namespace = tag_without_namespace.replace('s','')
 
-    output_filename = f'{subfolder}/{full_name}.{tag_without_namespace}-meta.xml'
+    output_filename = f'{subfolder}/{field_name}.{tag_without_namespace}-meta.xml'
 
     # Remove the namespace prefix from the element tags
     for element in label.iter():
@@ -96,11 +96,11 @@ def parse_xml_file(metadata_file_path):
         logging.info("Error: Unable to parse the XML file.")
     return None
 
-def create_single_elements(xml_tag):
+def create_single_elements(xml_root_element):
     """"Create an element for un-nested elements."""
-    return ET.Element(xml_tag)
+    return ET.Element(xml_root_element)
 
-def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_tag):
+def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element):
     """Process a single metadata file and extract elements."""
     metadata_file_path = os.path.join(metadata_directory, filename)
     root = parse_xml_file(metadata_file_path)
@@ -114,7 +114,7 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
     else:
         parent_metadata_name = None
 
-    single_elements = create_single_elements(xml_tag)
+    single_elements = create_single_elements(xml_root_element)
 
     # Iterate through the dynamically extracted XML tags
     for tag in xml_tags:
@@ -126,12 +126,12 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                 single_element.text = label.text
                 single_elements.append(single_element)
             else:
-                full_name = extract_full_name(label, ns)
-                if full_name:
+                field_name = extract_field_name(label, ns)
+                if field_name:
                     create_nested_xml_file(label, metadata_directory, tag,
-                                           full_name, parent_metadata_name)
+                                           field_name, parent_metadata_name)
                 else:
-                    logging.info('Skipping %s element without fullName', tag)
+                    logging.info('Skipping %s element without a supported field name', tag)
 
     # only create an XML with un-nested elements if there are any
     if len(list(single_elements.iter())) > 1:
@@ -141,22 +141,22 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                              parent_metadata_name,
                              f'{parent_metadata_name}{expected_extension}'))
 
-def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_tag):
+def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_root_element):
     """Separate metadata into individual XML files."""
     # Iterate through the directory to process files
     for filename in os.listdir(metadata_directory):
         expected_extension = f".{meta_extension}-meta.xml"
         if filename.endswith(expected_extension):
-            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_tag)
+            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element)
 
 def main(metadata_type, output_directory):
     """Main function."""
     metadata_folder = None
     for metadata_info in SUPPORTED_METADATA:
-        if metadata_info["metaTag"] == metadata_type:
+        if metadata_info["metaSuffix"] == metadata_type:
             metadata_folder = metadata_info["directoryName"]
-            meta_extension = metadata_info["metaTag"]
-            xml_tag = metadata_info["xmlTag"]
+            meta_extension = metadata_info["metaSuffix"]
+            xml_root_element = metadata_info["xmlElement"]
             break
 
     if not metadata_folder:
@@ -164,7 +164,7 @@ def main(metadata_type, output_directory):
 
     metadata_directory = os.path.join(output_directory, metadata_folder)
     separate_metadata(metadata_directory, metadata_type,
-                      meta_extension, xml_tag)
+                      meta_extension, xml_root_element)
 
 if __name__ == '__main__':
     inputs = parse_args()
