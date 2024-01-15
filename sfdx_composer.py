@@ -7,7 +7,6 @@ from constants import XML_HEADER, SUPPORTED_METADATA, parse_args
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
-
 def read_individual_xmls(metadata_directory, expected_extension, metadata_type):
     """Read each XML file."""
     individual_xmls = {}
@@ -66,11 +65,16 @@ def merge_xml_content(individual_xmls, xml_root_element):
 
     return merged_xmls
 
-def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension):
+def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension, recurse):
     """Create the final XMLs."""
     for parent_metadata_type, parent_metadata_root in merged_xmls.items():
-        # Load the parent meta file if it exists in the sub-folder (profiles and perm sets)
-        existing_meta_file_path = os.path.join(metadata_directory, parent_metadata_type, f'{parent_metadata_type}{expected_extension}')
+        if recurse:
+            # When Recurse is True, parse the parent meta file in the recursive directory
+            recursive_metadata_directory = os.path.join(metadata_directory, parent_metadata_type, parent_metadata_type)
+            existing_meta_file_path = os.path.join(recursive_metadata_directory, f'{parent_metadata_type}{expected_extension}')
+        else:
+            existing_meta_file_path = os.path.join(metadata_directory, parent_metadata_type, f'{parent_metadata_type}{expected_extension}')
+        # Load the parent meta file if it exists in the sub-folder
         if os.path.exists(existing_meta_file_path):
             existing_tree = ET.parse(existing_meta_file_path)
             existing_root = existing_tree.getroot()
@@ -90,18 +94,21 @@ def format_and_write_xmls(merged_xmls, metadata_directory, expected_extension):
         # Remove existing XML declaration
         formatted_xml = '\n'.join(line for line in formatted_xml.split('\n') if not line.strip().startswith('<?xml'))
 
-        parent_metadata_filename = os.path.join(metadata_directory, f'{parent_metadata_type}{expected_extension}')
+        if recurse:
+            parent_metadata_filename = os.path.join(metadata_directory, parent_metadata_type, f'{parent_metadata_type}{expected_extension}')
+        else:
+            parent_metadata_filename = os.path.join(metadata_directory, f'{parent_metadata_type}{expected_extension}')
+
         with open(parent_metadata_filename, 'wb') as file:
             file.write(XML_HEADER.encode('utf-8'))
             file.write(formatted_xml.encode('utf-8'))
 
-def combine_metadata(output_directory, metadata_type, meta_extension, xml_root_element):
+def combine_metadata(output_directory, metadata_type, meta_extension, xml_root_element, recurse=False):
     """Combine the metadata for deployments."""
     expected_extension = f".{meta_extension}-meta.xml"
     individual_xmls = read_individual_xmls(output_directory, expected_extension, metadata_type)
     merged_xmls = merge_xml_content(individual_xmls, xml_root_element)
-    format_and_write_xmls(merged_xmls, output_directory, expected_extension)
-
+    format_and_write_xmls(merged_xmls, output_directory, expected_extension, recurse)
 
     logging.info('The metadata type `%s` has been compiled for deployments.', metadata_type)
 
@@ -113,10 +120,15 @@ def main(metadata_type, output_directory):
             metadata_folder = metadata_info["directoryName"]
             meta_extension = metadata_info["metaSuffix"]
             xml_root_element = metadata_info["xmlElement"]
+            recurse = metadata_info.get("recurse", False)
             break
+
+    if not metadata_folder:
+        return
+
     metadata_directory = os.path.join(output_directory, metadata_folder)
     combine_metadata(metadata_directory, metadata_type,
-                     meta_extension, xml_root_element)
+                     meta_extension, xml_root_element, recurse)
 
 if __name__ == '__main__':
     inputs = parse_args()
