@@ -37,7 +37,8 @@ To decompose the original meta files, run the decomposer script for each metadat
 Arguments:
 - `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `constants.py`)
 - `-o`/`--output` - directory containing the metadata (defaults to `force-app/main/default` if the argument isn't provided)
-NOTE: This script will have issues for file-paths which exceed the operating system limit. Ensure you use short file-names when possible.
+
+**NOTE**: This script will have issues for file-paths which exceed the operating system limit. Ensure you use short file-names when possible.
 
 ## Compose Files
 To recompose the files into meta files accepted for deployments, run the composer script for each metadata type:
@@ -65,6 +66,7 @@ To add a metadata type via a Pull Request:
     - `metaSuffix` should be the suffix the original meta files use (ex: `labels` is the suffix for `CustomLabels.labels-meta.xml`)
     - `xmlElement` should be the root element of the original meta files (ex: `CustomLabels` is the root element in meta header `<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">`)
     - `fieldNames` should contain a comma-seperated list (no spaces) of Required Field Names for Nested Elements under the metadata type
+        - Field Names are used to name decomposed meta files for nested elements and should contain unique values from other nested elements
         - In the below XML file, the `apexClass` field name is a required field name for the nested `<classAccesses>` element and should be included in possible field names for permission set
         - Fields which do not have nested elements such as `<description>` should not be included in `fieldNames` (All unnested elements will be added to the same meta file when decomposed)
         - Field Names will be evaluated in the order they appear in the list (ensure `fullName` is first since it's inherited from the Metadata type)
