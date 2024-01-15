@@ -76,5 +76,11 @@
     "metaSuffix": "marketingappextension",
     "xmlElement": "MarketingAppExtension",
     "fieldNames": "fullName,actionName,masterLabel"
+  },
+  {
+    "directoryName": "translations",
+    "metaSuffix": "translation",
+    "xmlElement": "Translation",
+    "fieldNames": "fullName,name"
   }
 ]

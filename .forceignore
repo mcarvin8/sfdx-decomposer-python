@@ -25,6 +25,7 @@ package.xml
 **/globalValueSetTranslations/**/*.xml
 **/standardValueSetTranslations/**/*.xml
 **/marketingappextensions/**/*.xml
+**/translations/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -40,3 +41,4 @@ package.xml
 !**/globalValueSetTranslations/*.globalValueSetTranslation-meta.xml
 !**/standardValueSetTranslations/*.standardValueSetTranslation-meta.xml
 !**/marketingappextensions/*.marketingappextension-meta.xml
+!**/translations/*.translation-meta.xml

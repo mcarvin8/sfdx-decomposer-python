@@ -58,3 +58,4 @@ $RECYCLE.BIN/
 **/globalValueSetTranslations/*.globalValueSetTranslation-meta.xml
 **/standardValueSetTranslations/*.standardValueSetTranslation-meta.xml
 **/marketingappextensions/*.marketingappextension-meta.xml
+**/translations/*.translation-meta.xml
