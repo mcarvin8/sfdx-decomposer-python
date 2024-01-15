@@ -18,6 +18,8 @@ The following metadata types are supported:
 - Standard Value Set Translation (`-t "standardValueSetTranslation"`)
 - Marketing App Extension (`-t "marketingappextension"`)
 - Translations (`-t "translation"`)
+- Standard Value Sets (`-t "standardValueSet"`)
+- Global Value Sets (`-t "globalValueSet"`)
 
 **NOTE**:
 Per Salesforce documentation for **Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
