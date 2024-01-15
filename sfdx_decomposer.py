@@ -3,18 +3,18 @@ import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-from constants import XML_HEADER, ns, SUPPORTED_METADATA, FIELD_NAMES, parse_args
+from constants import XML_HEADER, ns, SUPPORTED_METADATA, parse_args
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
-def extract_field_name(element, namespace):
+def extract_field_name(element, namespace, field_names):
     """Extract the field name from a nested element."""
     field_name = None
-    for tag in FIELD_NAMES:
+    for field_name in field_names:
         # update to find nested elements
-        field_name = element.find(f'.//sforce:{tag}', namespace)
+        field_name = element.find(f'.//sforce:{field_name}', namespace)
         if field_name is not None:
-            break  # Break the loop if a matching tag is found
+            break  # Break the loop if a matching field name is found
 
     return field_name.text if field_name is not None else None
 
@@ -100,7 +100,7 @@ def create_single_elements(xml_root_element):
     """"Create an element for un-nested elements."""
     return ET.Element(xml_root_element)
 
-def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element):
+def process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element, field_names):
     """Process a single metadata file and extract elements."""
     metadata_file_path = os.path.join(metadata_directory, filename)
     root = parse_xml_file(metadata_file_path)
@@ -126,7 +126,7 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                 single_element.text = label.text
                 single_elements.append(single_element)
             else:
-                field_name = extract_field_name(label, ns)
+                field_name = extract_field_name(label, ns, field_names)
                 if field_name:
                     create_nested_xml_file(label, metadata_directory, tag,
                                            field_name, parent_metadata_name)
@@ -141,13 +141,13 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                              parent_metadata_name,
                              f'{parent_metadata_name}{expected_extension}'))
 
-def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_root_element):
+def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_root_element, field_names):
     """Separate metadata into individual XML files."""
     # Iterate through the directory to process files
     for filename in os.listdir(metadata_directory):
         expected_extension = f".{meta_extension}-meta.xml"
         if filename.endswith(expected_extension):
-            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element)
+            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element, field_names)
 
 def main(metadata_type, output_directory):
     """Main function."""
@@ -157,6 +157,7 @@ def main(metadata_type, output_directory):
             metadata_folder = metadata_info["directoryName"]
             meta_extension = metadata_info["metaSuffix"]
             xml_root_element = metadata_info["xmlElement"]
+            field_names = metadata_info["fieldNames"].split(',')
             break
 
     if not metadata_folder:
@@ -164,7 +165,7 @@ def main(metadata_type, output_directory):
 
     metadata_directory = os.path.join(output_directory, metadata_folder)
     separate_metadata(metadata_directory, metadata_type,
-                      meta_extension, xml_root_element)
+                      meta_extension, xml_root_element, field_names)
 
 if __name__ == '__main__':
     inputs = parse_args()

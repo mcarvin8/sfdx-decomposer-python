@@ -64,16 +64,19 @@ To add a metadata type via a Pull Request:
     - `directoryName` should be the root folder for that metadata type
     - `metaSuffix` should be the suffix the original meta files use (ex: `labels` is the suffix for `CustomLabels.labels-meta.xml`)
     - `xmlElement` should be the root element of the original meta files (ex: `CustomLabels` is the root element in meta header `<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">`)
+    - `fieldNames` should contain a comma-seperated list (no spaces) of Required Field Names for Nested Elements under the metadata type
+        - In the below XML file, the `apexClass` field name is a required field name for the nested `<classAccesses>` element and should be included in possible field names for permission set
+        - Fields which do not have nested elements such as `<description>` should not be included in `fieldNames` (All unnested elements will be added to the same meta file when decomposed)
+        - Field Names will be evaluated in the order they appear in the list (ensure `fullName` is first since it's inherited from the Metadata type)
 ``` json
-{
-    "directoryName": "labels",
-    "metaSuffix": "labels",
-    "xmlElement": "CustomLabels"
-}
+  {
+    "directoryName": "permissionsets",
+    "metaSuffix": "permissionset",
+    "xmlElement": "PermissionSet",
+    "fieldNames": "fullName,application,apexClass,name,externalDataSource,flow,object,apexPage,recordType,tab,field"
+  },
 ```
-3. Using the Metadata API Developer Guide, ensure FIELD_NAMES in the `constants.py` contains the required field names for nested elements under the metadata type
-    - In the below XML file, the `apexClass` field name is a required field name for the nested classAccesses element and should be included in the FIELD_NAMES variable.
-    - Fields which do not have nested elements such as `<description></description>` should not be included in the FIELD_NAMES variable. All unnested elements will be added to the same meta file when decomposed.
+
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
@@ -121,17 +124,6 @@ To add a metadata type via a Pull Request:
 </PermissionSet>
 ```
 
-``` python
-# field names used to name decomposed files for nested elements
-# field names should be required per the Metadata API developer guide
-# field names will be processed in the order they appear below
-# ensure fullName is first since that is a default field from the Metadata type
-FIELD_NAMES = ['fullName', 'application', 'apexClass', 'name', 'externalDataSource', 'flow',
-            'object', 'apexPage', 'recordType', 'tab', 'field', 'startAddress',
-            'dataCategoryGroup', 'layout', 'weekdayStart', 'friendlyname',
-            'actionName', 'targetReference', 'assignToReference',
-            'choiceText', 'promptText', 'masterLabel']
-```
 4. Update the `.forceignore` to ignore the decomposed meta files and allow (`!`) the original meta files
 5. Update the `.gitignore` to ignore the original meta files
 6. Run the `sfdx_decomposer.py` script to decompose the original meta files for the new metadata type. Confirm the files are decomposed as intended.
