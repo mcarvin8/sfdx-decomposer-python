@@ -61,3 +61,5 @@ $RECYCLE.BIN/
 **/translations/*.translation-meta.xml
 **/globalValueSets/*.globalValueSet-meta.xml
 **/standardValueSets/*.standardValueSet-meta.xml
+**/decisionMatrixDefinition/*.decisionMatrixDefinition-meta.xml
+**/aiScoringModelDefinitions/*.aiScoringModelDefinition-meta.xml
