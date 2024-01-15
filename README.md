@@ -20,6 +20,8 @@ The following metadata types are supported:
 - Translations (`-t "translation"`)
 - Standard Value Sets (`-t "standardValueSet"`)
 - Global Value Sets (`-t "globalValueSet"`)
+- AI Scoring Model Definition (`-t "aiScoringModelDefinition"`)
+- Decision Matrix Definition (`-t "decisionMatrixDefinition"`)
 
 **NOTE**:
 Per Salesforce documentation for **Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
@@ -38,7 +40,7 @@ To decompose the original meta files, run the decomposer script for each metadat
 - python3 ./sfdx_decomposer.py -t "TYPE"
 ```
 Arguments:
-- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `constants.py`)
+- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `metadata.json`)
 - `-o`/`--output` - directory containing the metadata (defaults to `force-app/main/default` if the argument isn't provided)
 
 **NOTE**: This script will have issues for file-paths which exceed the operating system limit. Ensure you use short file-names when possible.
@@ -50,7 +52,7 @@ To recompose the files into meta files accepted for deployments, run the compose
 - python3 ./sfdx_composer.py -t "TYPE"
 ```
 Arguments:
-- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `constants.py`)
+- `-t`/`--metadata-type` - metadata type to process (same value as the `metaSuffix` value in `metadata.json`)
 - `-o`/`--output` - directory containing the metadata (defaults to `force-app/main/default` if the argument isn't provided)
 
 ## Ignore Files

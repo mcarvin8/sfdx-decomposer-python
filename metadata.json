@@ -94,5 +94,17 @@
     "metaSuffix": "standardValueSet",
     "xmlElement": "StandardValueSet",
     "fieldNames": "fullName,name"
+  },
+  {
+    "directoryName": "decisionMatrixDefinition",
+    "metaSuffix": "decisionMatrixDefinition",
+    "xmlElement": "DecisionMatrixDefinition",
+    "fieldNames": "fullName,name"
+  },
+  {
+    "directoryName": "aiScoringModelDefinitions",
+    "metaSuffix": "aiScoringModelDefinition",
+    "xmlElement": "AIScoringModelDefinition",
+    "fieldNames": "fullName,name"
   }
 ]

@@ -28,6 +28,8 @@ package.xml
 **/translations/**/*.xml
 **/globalValueSets/**/*.xml
 **/standardValueSets/**/*.xml
+**/decisionMatrixDefinition/**/*.xml
+**/aiScoringModelDefinitions/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -46,3 +48,5 @@ package.xml
 !**/translations/*.translation-meta.xml
 !**/globalValueSets/*.globalValueSet-meta.xml
 !**/standardValueSets/*.standardValueSet-meta.xml
+!**/decisionMatrixDefinition/*.decisionMatrixDefinition-meta.xml
+!**/aiScoringModelDefinitions/*.aiScoringModelDefinition-meta.xml
