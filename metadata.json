@@ -1,0 +1,67 @@
+[
+    {
+      "directoryName": "labels",
+      "metaSuffix": "labels",
+      "xmlElement": "CustomLabels"
+    },
+    {
+      "directoryName": "workflows",
+      "metaSuffix": "workflow",
+      "xmlElement": "Workflow"
+    },
+    {
+      "directoryName": "profiles",
+      "metaSuffix": "profile",
+      "xmlElement": "Profile"
+    },
+    {
+      "directoryName": "permissionsets",
+      "metaSuffix": "permissionset",
+      "xmlElement": "PermissionSet"
+    },
+    {
+      "directoryName": "matchingRules",
+      "metaSuffix": "matchingRule",
+      "xmlElement": "MatchingRules"
+    },
+    {
+      "directoryName": "assignmentRules",
+      "metaSuffix": "assignmentRules",
+      "xmlElement": "AssignmentRules"
+    },
+    {
+      "directoryName": "flows",
+      "metaSuffix": "flow",
+      "xmlElement": "Flow"
+    },
+    {
+      "directoryName": "escalationRules",
+      "metaSuffix": "escalationRules",
+      "xmlElement": "EscalationRules"
+    },
+    {
+      "directoryName": "sharingRules",
+      "metaSuffix": "sharingRules",
+      "xmlElement": "SharingRules"
+    },
+    {
+      "directoryName": "autoResponseRules",
+      "metaSuffix": "autoResponseRules",
+      "xmlElement": "AutoResponseRules"
+    },
+    {
+      "directoryName": "globalValueSetTranslations",
+      "metaSuffix": "globalValueSetTranslation",
+      "xmlElement": "GlobalValueSetTranslation"
+    },
+    {
+      "directoryName": "standardValueSetTranslations",
+      "metaSuffix": "standardValueSetTranslation",
+      "xmlElement": "StandardValueSetTranslation"
+    },
+    {
+      "directoryName": "marketingappextensions",
+      "metaSuffix": "marketingappextension",
+      "xmlElement": "MarketingAppExtension"
+    }
+]

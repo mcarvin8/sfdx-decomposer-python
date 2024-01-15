@@ -60,17 +60,16 @@ Salesforce CLI version 2.10.2 correctly handles opt-in style with directories on
 To add a metadata type via a Pull Request:
 
 1. Reference the metadata type details in https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_intro.htm
-2. Add the metadata to the SUPPORTED_METADATA json in `constants.py`:
+2. Add the metadata to `metadata.json`:
     - `directoryName` should be the root folder for that metadata type
     - `metaSuffix` should be the suffix the original meta files use (ex: `labels` is the suffix for `CustomLabels.labels-meta.xml`)
     - `xmlElement` should be the root element of the original meta files (ex: `CustomLabels` is the root element in meta header `<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">`)
-``` python
-SUPPORTED_METADATA = [
-    {
-      "directoryName": "labels",
-      "metaSuffix": "labels",
-      "xmlElement": "CustomLabels"
-    }
+``` json
+{
+    "directoryName": "labels",
+    "metaSuffix": "labels",
+    "xmlElement": "CustomLabels"
+}
 ```
 3. Using the Metadata API Developer Guide, ensure FIELD_NAMES in the `constants.py` contains the required field names for nested elements under the metadata type
     - In the below XML file, the `apexClass` field name is a required field name for the nested classAccesses element and should be included in the FIELD_NAMES variable.
@@ -135,3 +134,5 @@ FIELD_NAMES = ['fullName', 'application', 'apexClass', 'name', 'externalDataSour
 ```
 4. Update the `.forceignore` to ignore the decomposed meta files and allow (`!`) the original meta files
 5. Update the `.gitignore` to ignore the original meta files
+6. Run the `sfdx_decomposer.py` script to decompose the original meta files for the new metadata type. Confirm the files are decomposed as intended.
+7. Run the `sfdx_composer.py` script to recompose the meta files for the new metadata type. Confirm the meta files created are accepted for deployments.

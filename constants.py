@@ -1,76 +1,13 @@
 import argparse
+import json
+import os
 
 ns = {'sforce': 'http://soap.sforce.com/2006/04/metadata'}
 XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>\n'
 
-# supported metadata
-SUPPORTED_METADATA = [
-    {
-      "directoryName": "labels",
-      "metaSuffix": "labels",
-      "xmlElement": "CustomLabels"
-    },
-    {
-      "directoryName": "workflows",
-      "metaSuffix": "workflow",
-      "xmlElement": "Workflow"
-    },
-    {
-      "directoryName": "profiles",
-      "metaSuffix": "profile",
-      "xmlElement": "Profile"
-    },
-    {
-      "directoryName": "permissionsets",
-      "metaSuffix": "permissionset",
-      "xmlElement": "PermissionSet"
-    },
-    {
-      "directoryName": "matchingRules",
-      "metaSuffix": "matchingRule",
-      "xmlElement": "MatchingRules"
-    },
-    {
-      "directoryName": "assignmentRules",
-      "metaSuffix": "assignmentRules",
-      "xmlElement": "AssignmentRules"
-    },
-    {
-      "directoryName": "flows",
-      "metaSuffix": "flow",
-      "xmlElement": "Flow"
-    },
-    {
-      "directoryName": "escalationRules",
-      "metaSuffix": "escalationRules",
-      "xmlElement": "EscalationRules"
-    },
-    {
-      "directoryName": "sharingRules",
-      "metaSuffix": "sharingRules",
-      "xmlElement": "SharingRules"
-    },
-    {
-      "directoryName": "autoResponseRules",
-      "metaSuffix": "autoResponseRules",
-      "xmlElement": "AutoResponseRules"
-    },
-    {
-      "directoryName": "globalValueSetTranslations",
-      "metaSuffix": "globalValueSetTranslation",
-      "xmlElement": "GlobalValueSetTranslation"
-    },
-    {
-      "directoryName": "standardValueSetTranslations",
-      "metaSuffix": "standardValueSetTranslation",
-      "xmlElement": "StandardValueSetTranslation"
-    },
-    {
-      "directoryName": "marketingappextensions",
-      "metaSuffix": "marketingappextension",
-      "xmlElement": "MarketingAppExtension"
-    }
-]
+# Load JSON file to get supported metadata
+with open(os.path.abspath('metadata.json'), encoding='utf-8') as json_file:
+    SUPPORTED_METADATA = json.load(json_file)
 
 # field names used to name decomposed files for nested elements
 # field names should be required per the Metadata API developer guide
