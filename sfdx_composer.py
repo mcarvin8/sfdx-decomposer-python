@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
@@ -16,11 +17,28 @@ def read_individual_xmls(metadata_directory, expected_extension, metadata_type):
         root = tree.getroot()
         individual_xmls.setdefault((parent_metadata_type, sub_folder), []).append(root)
 
-    # don't want to compare files with original meta extension or the bot meta file
+    # don't want to compare files with original meta extension
     # files with the original meta extension will be used as the base XML to build off
-    unwanted_extensions = [expected_extension, '.bot-meta.xml']
+    unwanted_extensions = [expected_extension]
+
+    # for bot and botVersion, define a regex for v# subdirectories
+    # botVersion shouldn't look at bot meta files
+    # bot shouldn't look at bot version meta files
+    version_pattern = re.compile(r'v\d+')
+    if metadata_type == 'botVersion':
+        unwanted_extensions.append('.bot-meta.xml')
+    elif metadata_type == 'bot':
+        unwanted_extensions.append('.botVersion-meta.xml')
 
     for root, _, files in os.walk(metadata_directory):
+        # Skip processing if 'bot' and sub-directory matches "v#"
+        if metadata_type == 'bot' and version_pattern.search(root):
+            continue
+
+        # Skip processing if 'botVersion' and sub-directory does not match "v#"
+        if metadata_type == 'botVersion' and not version_pattern.search(root):
+            continue
+
         for filename in files:
             if filename.endswith('.xml') and not any(filename.endswith(ext) for ext in unwanted_extensions):
                 file_path = os.path.join(root, filename)
@@ -28,7 +46,7 @@ def read_individual_xmls(metadata_directory, expected_extension, metadata_type):
                 sub_folder = None
                 if metadata_type == 'labels':
                     parent_metadata_type = 'CustomLabels'
-                elif metadata_type == 'botVersion':
+                elif metadata_type in ['botVersion', 'bot']:
                     parent_metadata_type = relative_path.split(os.path.sep)[1]
                     sub_folder = relative_path.split(os.path.sep)[0]
                 else:

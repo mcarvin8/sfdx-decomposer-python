@@ -64,3 +64,4 @@ $RECYCLE.BIN/
 **/decisionMatrixDefinition/*.decisionMatrixDefinition-meta.xml
 **/aiScoringModelDefinitions/*.aiScoringModelDefinition-meta.xml
 **/bots/*/*.botVersion-meta.xml
+**/bots/*/*.bot-meta.xml

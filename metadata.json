@@ -113,5 +113,12 @@
     "xmlElement": "BotVersion",
     "fieldNames": "fullName,name,developerName,stepIdentifier,invocationActionName,parameterName,nlpProviderType,dialog",
     "recurse": true
+  },
+  {
+    "directoryName": "bots",
+    "metaSuffix": "bot",
+    "xmlElement": "Bot",
+    "fieldNames": "fullName,name,developerName,stepIdentifier,invocationActionName,parameterName,nlpProviderType,dialog,chatButtonName",
+    "recurse": true
   }
 ]
