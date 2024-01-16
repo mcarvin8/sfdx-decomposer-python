@@ -23,6 +23,7 @@ The following metadata types are supported:
 - AI Scoring Model Definition (`-t "aiScoringModelDefinition"`)
 - Decision Matrix Definition (`-t "decisionMatrixDefinition"`)
 - Bot Version (`-t "botVersion"`)
+- Bot (`-t "bot"`)
 
 **NOTE**:
 Per Salesforce documentation for **Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
@@ -76,7 +77,7 @@ To add a metadata type via a Pull Request:
         - In the below XML file, the `apexClass` field name is a required field name for the nested `<classAccesses>` element and should be included in possible field names for permission set
         - Fields which do not have nested elements such as `<description>` should not be included in `fieldNames` (All unnested elements will be added to the same meta file when decomposed)
         - Field Names will be evaluated in the order they appear in the list (ensure `fullName` is first since it's inherited from the Metadata type)
-    - `recurse` key is optional and should only be set if the original metadata lives in sub-directories underneath the parent metadata folder and requires additional decomposing (ex: `botVersion`)
+    - `recurse` key is optional and should only be set if the original metadata lives in sub-directories underneath the parent metadata folder and requires additional decomposing (ex: `botVersion` and `bot`)
 ``` json
   {
     "directoryName": "permissionsets",
