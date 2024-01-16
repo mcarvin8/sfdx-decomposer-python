@@ -30,6 +30,7 @@ package.xml
 **/standardValueSets/**/*.xml
 **/decisionMatrixDefinition/**/*.xml
 **/aiScoringModelDefinitions/**/*.xml
+**/bots/**/*.xml
 
 # Allow the meta files
 !**/permissionsets/*.permissionset-meta.xml
@@ -50,3 +51,5 @@ package.xml
 !**/standardValueSets/*.standardValueSet-meta.xml
 !**/decisionMatrixDefinition/*.decisionMatrixDefinition-meta.xml
 !**/aiScoringModelDefinitions/*.aiScoringModelDefinition-meta.xml
+!**/bots/*/*.botVersion-meta.xml
+!**/bots/*/*.bot-meta.xml

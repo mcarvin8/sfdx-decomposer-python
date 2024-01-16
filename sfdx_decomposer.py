@@ -38,17 +38,12 @@ def create_meta_xml_file(contents, file_name):
     sorted_root.extend(sorted_elements)
 
     unformatted_xml = minidom.parseString(ET.tostring(sorted_root)).toprettyxml(indent="    ")
-
     formatted_xml = format_xml_contents(unformatted_xml)
 
-    try:
-        with open(file_name, 'wb') as file:
-            file.write(XML_HEADER.encode('utf-8'))
-            file.write(formatted_xml.encode('utf-8'))
-        logging.info('Saved meta content to %s', file_name)
-    except Exception as e:
-        logging.info('ERROR writing file: %s', file_name)
-        logging.info('%s', e)
+    with open(file_name, 'wb') as file:
+        file.write(XML_HEADER.encode('utf-8'))
+        file.write(formatted_xml.encode('utf-8'))
+    logging.info('Saved meta content to %s', file_name)
 
 def create_nested_xml_file(label, parent_directory, tag, field_name, parent_metadata_name=None):
     """Create a new XML file with nested elements."""
@@ -141,13 +136,24 @@ def process_metadata_file(metadata_directory, filename, metadata_type, expected_
                              parent_metadata_name,
                              f'{parent_metadata_name}{expected_extension}'))
 
-def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_root_element, field_names):
+def process_directory(metadata_directory, metadata_type, meta_extension, xml_root_element, field_names):
+    """Recursively process metadata files in the directory and its subdirectories."""
+    for root, _, files in os.walk(metadata_directory):
+        for filename in files:
+            if filename.endswith(meta_extension):
+                process_metadata_file(root, filename, metadata_type,
+                                      meta_extension, xml_root_element, field_names)
+
+def separate_metadata(metadata_directory, metadata_type, meta_extension, xml_root_element, field_names, recurse=False):
     """Separate metadata into individual XML files."""
-    # Iterate through the directory to process files
-    for filename in os.listdir(metadata_directory):
-        expected_extension = f".{meta_extension}-meta.xml"
-        if filename.endswith(expected_extension):
-            process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element, field_names)
+    expected_extension = f".{meta_extension}-meta.xml"
+    if recurse:
+        process_directory(metadata_directory, metadata_type, expected_extension, xml_root_element, field_names)
+    else:
+        # Process files only in the specified directory without recursion
+        for filename in os.listdir(metadata_directory):
+            if filename.endswith(expected_extension):
+                process_metadata_file(metadata_directory, filename, metadata_type, expected_extension, xml_root_element, field_names)
 
 def main(metadata_type, output_directory):
     """Main function."""
@@ -158,6 +164,7 @@ def main(metadata_type, output_directory):
             meta_extension = metadata_info["metaSuffix"]
             xml_root_element = metadata_info["xmlElement"]
             field_names = metadata_info["fieldNames"].split(',')
+            recurse = metadata_info.get("recurse", None)
             break
 
     if not metadata_folder:
@@ -165,7 +172,8 @@ def main(metadata_type, output_directory):
 
     metadata_directory = os.path.join(output_directory, metadata_folder)
     separate_metadata(metadata_directory, metadata_type,
-                      meta_extension, xml_root_element, field_names)
+                      meta_extension, xml_root_element, field_names,
+                      recurse)
 
 if __name__ == '__main__':
     inputs = parse_args()
