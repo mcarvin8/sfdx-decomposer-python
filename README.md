@@ -2,6 +2,12 @@
 
 Python scripts to decompose Salesforce metadata files into separate files for version control and recompose files compatible for deployments.
 
+**DISCLAIMER:**
+- This is not an officially supported tool. Please use at your own risk.
+- Confirm your pipeline is already stable prior to implementing this tool.
+- Test this out on your own in sandboxes for the metadata types you wish to use this tool for prior to implementing this in your production pipelines.
+- Example decomposed files come from various Salesforce documentation and publically available GitHub repositories. All example metadata files belongs to Salesforce.
+
 ## Supported Metadata
 The following metadata types are supported:
 - Custom Labels (`-t "labels"`)
