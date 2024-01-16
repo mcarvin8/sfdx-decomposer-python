@@ -63,3 +63,4 @@ $RECYCLE.BIN/
 **/standardValueSets/*.standardValueSet-meta.xml
 **/decisionMatrixDefinition/*.decisionMatrixDefinition-meta.xml
 **/aiScoringModelDefinitions/*.aiScoringModelDefinition-meta.xml
+**/bots/*/*.botVersion-meta.xml

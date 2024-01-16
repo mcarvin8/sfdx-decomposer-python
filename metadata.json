@@ -106,5 +106,12 @@
     "metaSuffix": "aiScoringModelDefinition",
     "xmlElement": "AIScoringModelDefinition",
     "fieldNames": "fullName,name"
+  },
+  {
+    "directoryName": "bots",
+    "metaSuffix": "botVersion",
+    "xmlElement": "BotVersion",
+    "fieldNames": "fullName,name,developerName,stepIdentifier,invocationActionName,parameterName,nlpProviderType,dialog",
+    "recurse": true
   }
 ]
