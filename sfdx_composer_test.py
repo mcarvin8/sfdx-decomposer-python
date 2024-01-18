@@ -1,6 +1,7 @@
+import hashlib
 import json
 import os
-import hashlib
+import sys
 
 import sfdx_composer
 
@@ -16,7 +17,7 @@ def calculate_sha256(file_path):
     return sha256.hexdigest()
 
 def verify_hashes(baseline_directory, composed_directory):
-    """Verify SHA-256 hashes of the composed files against the test directory."""
+    """Verify SHA-256 hashes of the composed files against the baseline directory."""
     # Dictionary to store hashes and corresponding relative file names
     hash_dict = {}
     # Iterate through files in baseline_directory
@@ -46,7 +47,8 @@ def verify_hashes(baseline_directory, composed_directory):
     if not hash_dict:
         print(f'Success: All files in {baseline_directory} have matches in {composed_directory}.')
     else:
-        print(f'Error: Not all files in {baseline_directory}  have matches in {composed_directory}.')
+        print(f'ERROR: Not all files in {baseline_directory} have matches in {composed_directory}.')
+        sys.exit(1)
 
 # Load JSON file to get supported metadata
 with open(os.path.abspath('metadata.json'), encoding='utf-8') as json_file:
