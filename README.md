@@ -32,7 +32,7 @@ The following metadata types are supported:
 - Bot (`-t "bot"`)
 
 **NOTE**:
-Per Salesforce documentation for **Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
+Per Salesforce documentation for **Standard/Global Value Set Translations**, when a value isn't translated, its translation becomes a comment that's paired with its label. 
 ``` xml
     <valueTranslation>
         <masterLabel>Warm</masterLabel>
@@ -68,6 +68,17 @@ Arguments:
 The `.gitignore` and `.forceignore` have been updated to have Git ignore the original meta files and have the Salesforce CLI ignore the decomposed meta files.
 
 Salesforce CLI version 2.10.2 correctly handles opt-in style with directories on the forceignore (https://github.com/forcedotcom/cli/issues/2404). Ensure you're using a version of the CLI which supports opt-in style with directories.
+
+**Pro-Tip:** Entries in the ignore files are processed in the order they appear. For Bots and Bot Versions, to have the Salesforce CLI ignore the active bot version or older versions when deploying, add the versions after the allow statements:
+
+```
+# Allow the meta files
+!**/bots/*/*.botVersion-meta.xml
+!**/bots/*/*.bot-meta.xml
+
+# Ignore the active bot version when deploying to avoid the `Can't edit an active bot version` deployment error
+**/bots/Assessment_Bot/v2.botVersion-meta.xml
+```
 
 ## Adding Metadata Types
 
