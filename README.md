@@ -1,5 +1,7 @@
 # SFDX Decomposer
 
+*NOTICE*: I have converted these Python scripts into a Salesforce CLI plugin (https://github.com/mcarvin8/sfdx-decomposer-plugin). Please use the CLI plugin instead of these Python scripts. All future updates will be pushed to the plugin.
+
 Python scripts to decompose Salesforce metadata files into separate files for version control and recompose files compatible for deployments.
 
 **DISCLAIMER:**
